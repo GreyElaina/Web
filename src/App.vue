@@ -8,7 +8,7 @@
 
 <script lang="ts" setup>
 import { AppSide, AppHeader, AppContainer } from 'src/components/app/index'
-import { useQuasar } from 'quasar'
+import { useQuasar, QNotifyCreateOptions } from 'quasar'
 import { useServerNotify } from 'src/services/utils/useServerNotify'
 import sanitizerHtml from 'src/utils/sanitizeHtml'
 import { useSettingStore } from 'src/stores/setting'
@@ -28,34 +28,13 @@ const appStore = useAppStore()
 const settingStore = useSettingStore()
 settingStore.init()
 
-useServerNotify('OnMessage', (message: string) => {
+useServerNotify('OnMessage', (options: QNotifyCreateOptions) => {
   $q.notify({
-    position: 'top',
+    position: options.position || 'top',
+    type: options.type || 'info',
     html: true,
-    message: sanitizerHtml(message),
-    timeout: 2500,
-    actions: [{ label: '关闭', color: 'white', handler: NOOP }]
-  })
-})
-
-useServerNotify('OnError', (message: string) => {
-  $q.notify({
-    position: 'top',
-    html: true,
-    type: 'negative',
-    message: sanitizerHtml(message),
-    timeout: 5000,
-    actions: [{ label: '关闭', color: 'white', handler: NOOP }]
-  })
-})
-
-useServerNotify('OnSuccess', (message: string) => {
-  $q.notify({
-    position: 'top',
-    html: true,
-    type: 'positive',
-    message: sanitizerHtml(message),
-    timeout: 5000,
+    message: sanitizerHtml(options.message),
+    timeout: options.timeout || 2500,
     actions: [{ label: '关闭', color: 'white', handler: NOOP }]
   })
 })
